@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { expect, describe, test, jest } from '@jest/globals';
-import Logger from '~/services/Logger';
+import Logger, { LogLevel } from '~/services/Logger';
 
 describe('Logger', () => {
   test('should log a message', () => {
@@ -8,7 +8,7 @@ describe('Logger', () => {
 
     console.info = jest.fn();
 
-    Logger.log(message);
+    Logger.log(message, LogLevel.On);
 
     expect(console.info).toHaveBeenCalledWith(
       `[nuxt/auto-translate] - ${message}`

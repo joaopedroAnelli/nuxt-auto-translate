@@ -2,6 +2,7 @@ import { PrismaClient, Language, Prisma } from '@prisma/client';
 import { LocaleObject, Locale } from '@nuxtjs/i18n';
 import LocaleNormalizer from './LocaleNormalizer';
 import SyncLanguagesFinder from './SyncLanguagesFinder';
+import Logger from './Logger';
 
 export default class LanguagesUpdater {
   prisma: PrismaClient;
@@ -28,11 +29,7 @@ export default class LanguagesUpdater {
     const languageCreations: Prisma.Prisma__LanguageClient<Language>[] = [];
 
     languagesToCreate.forEach((language) => {
-      // TODO: logger
-      // eslint-disable-next-line no-console
-      console.info(
-        `[nuxt/auto-translate] - Saving ${language.name}(${language.code}) language`
-      );
+      Logger.log(`Saving ${language.name}(${language.code}) language`);
       languageCreations.push(
         this.prisma.language.create({
           data: {
@@ -46,10 +43,7 @@ export default class LanguagesUpdater {
     const languageDeletes: Promise<any>[] = [];
 
     languagesToDelete.forEach((language) => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `[nuxt/auto-translate] - Deleting ${language.name}(${language.code}) language`
-      );
+      Logger.log(`Deleting ${language.name}(${language.code}) language`);
       languageDeletes.push(
         this.prisma.language.delete({
           where: {
