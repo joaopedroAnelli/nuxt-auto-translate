@@ -2,34 +2,29 @@
   "name": "nuxt-auto-translate",
   "version": "1.0.0",
   "license": "MIT",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
-    }
-  },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/src/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "dotenv -e .env.test -- jest"
   },
   "dependencies": {
     "@google-cloud/translate": "^7.0.2",
-    "@nuxt/kit": "^3.0.0-rc.9",
     "@nuxtjs/i18n": "^7.3.0",
     "@prisma/client": "^4.3.1",
-    "express": "^4.18.1"
+    "dotenv-cli": "^6.0.0",
+    "express": "^4.18.1",
+    "global": "^4.4.0",
+    "module-alias": "^2.2.2"
+  },
+  "resolutions": {
+    "@nuxt/types": "^2.15.8"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",
     "@babel/preset-env": "^7.19.0",
     "@babel/preset-typescript": "^7.18.6",
-    "@nuxt/module-builder": "latest",
-    "@nuxt/schema": "^3.0.0-rc.9",
     "@nuxt/test-utils": "0.2.2",
     "@nuxt/types": "^2.15.8",
     "@nuxtjs/eslint-config-typescript": "latest",
@@ -37,9 +32,12 @@
     "eslint": "latest",
     "jest": "^29.0.3",
     "jest-mock-extended": "^2.0.7",
-    "nuxt": "^3.0.0-rc.9",
     "prisma": "^4.3.1",
     "ts-jest": "^29.0.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
+  },
+  "_modulesAlias": {
+    "~": "./src"
   }
 }

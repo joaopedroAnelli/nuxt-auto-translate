@@ -1,9 +1,9 @@
-import { PrismaClient, Language } from '@prisma/client';
+import { PrismaClient, Language, Prisma } from '@prisma/client';
 import { LocaleObject, Locale } from '@nuxtjs/i18n';
 import LocaleNormalizer from './LocaleNormalizer';
 import SyncLanguagesFinder from './SyncLanguagesFinder';
 
-export default class {
+export default class LanguagesUpdater {
   prisma: PrismaClient;
   currentLanguages: Promise<Language[]>;
   normalizedLocales: ReturnType<typeof LocaleNormalizer.normalize>;
@@ -19,13 +19,13 @@ export default class {
     this.currentLanguages = prisma.language.findMany();
   }
 
-  async update(): Promise<any[]> {
+  async update(): Promise<Prisma.Prisma__LanguageClient<Language>[]> {
     const { languagesToCreate, languagesToDelete } = SyncLanguagesFinder.find(
       await this.currentLanguages,
       this.normalizedLocales
     );
 
-    const languageCreations: Promise<any>[] = [];
+    const languageCreations: Prisma.Prisma__LanguageClient<Language>[] = [];
 
     languagesToCreate.forEach((language) => {
       // TODO: logger

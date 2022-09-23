@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
-import LocaleNormalizer from '../services/LocaleNormalizer';
+import LocaleNormalizer from '../src/services/LocaleNormalizer';
 
 describe('LocaleNormalizer', () => {
   test('should string be { code: <string>, name: <string>}', () => {

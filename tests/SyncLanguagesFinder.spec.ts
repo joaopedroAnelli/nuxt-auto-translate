@@ -1,7 +1,7 @@
 import { describe, test, expect } from '@jest/globals';
 import { Language } from '@prisma/client';
-import { AutoTranslateLocaleObject } from '../services/LocaleNormalizer';
-import SyncLanguagesFinder from '../services/SyncLanguagesFinder';
+import { AutoTranslateLocaleObject } from '../src/services/LocaleNormalizer';
+import SyncLanguagesFinder from '../src/services/SyncLanguagesFinder';
 
 describe('SyncLocalesFinder', () => {
   test('should find a missing locale and no one to remove', () => {

@@ -1,7 +1,7 @@
 import { describe, test, expect } from '@jest/globals';
 import LanguageGrouper, {
   IMessagesMissingTranslation,
-} from '../services/LanguageGrouper';
+} from '../src/services/LanguageGrouper';
 
 describe('LanguageGrouper', () => {
   test('should group languages', () => {

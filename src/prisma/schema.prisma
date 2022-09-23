@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Message {
+  text  String  @id @unique
+  translations Translation[]
+}
+
+model Language {
+  code  String  @id @unique
+  name  String
+  translations Translation[]
+}
+
+model Translation {
+  id            Int @id @default(autoincrement())
+  messageText   String
+  languageCode  String
+  text          String
+  message       Message @relation(fields: [messageText], references: [text], onDelete: Cascade, onUpdate: Cascade)
+  language      Language @relation(fields: [languageCode], references: [code], onDelete: Cascade, onUpdate: Cascade)
+}

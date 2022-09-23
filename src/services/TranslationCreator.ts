@@ -1,12 +1,12 @@
 import { PrismaClient, Translation } from '@prisma/client';
+import { Translate } from '@google-cloud/translate/build/src/v2';
 import LanguageGrouper, {
   ILangMessages,
   IMessagesMissingTranslation,
 } from './LanguageGrouper';
 import TranslationService from './TranslationService';
-import { Translate } from '@google-cloud/translate/build/src/v2';
 
-export default class {
+export default class TranslationCreator {
   prismaClient: PrismaClient;
   defaultLocale: string;
   translationService: TranslationService;
