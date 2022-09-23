@@ -1,6 +1,6 @@
 import { describe, test, expect, jest } from '@jest/globals';
-import MessageCreator from '../src/services/MessageCreator';
 import { prismaMock } from './utils/prisma.mock';
+import MessageCreator from '~/services/MessageCreator';
 
 describe('MessageCreator', () => {
   test('should create message', async () => {

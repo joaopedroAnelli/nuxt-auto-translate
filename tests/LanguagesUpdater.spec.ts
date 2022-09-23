@@ -1,6 +1,6 @@
 import { describe, test, expect, jest } from '@jest/globals';
-import LanguagesUpdater from '../src/services/LanguagesUpdater';
 import { prismaMock } from './utils/prisma.mock';
+import LanguagesUpdater from '~/services/LanguagesUpdater';
 
 describe('LanguagesUpdater', () => {
   test('should create languages', async () => {

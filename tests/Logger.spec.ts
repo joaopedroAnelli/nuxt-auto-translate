@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { expect, describe, test, jest } from '@jest/globals';
-import Logger from '../src/services/Logger';
+import Logger from '~/services/Logger';
 
 describe('Logger', () => {
   test('should log a message', () => {

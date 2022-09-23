@@ -8,10 +8,10 @@ import {
   afterEach,
 } from '@jest/globals';
 import { MockProxy, mockDeep } from 'jest-mock-extended';
-import TranslationsBuilder from '../src/services/TranslationsBuilder';
-import DatabaseBuilder from '../src/services/DatabaseBuilder';
-import LanguagesUpdater from '../src/services/LanguagesUpdater';
-import TranslationCreator from '../src/services/TranslationCreator';
+import TranslationsBuilder from '~/services/TranslationsBuilder';
+import DatabaseBuilder from '~/services/DatabaseBuilder';
+import LanguagesUpdater from '~/services/LanguagesUpdater';
+import TranslationCreator from '~/services/TranslationCreator';
 
 describe('TranslationsBuilder', () => {
   let mockLanguagesUpdater: MockProxy<LanguagesUpdater>;

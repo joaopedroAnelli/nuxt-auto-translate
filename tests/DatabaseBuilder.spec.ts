@@ -7,7 +7,7 @@ import {
 } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, test, afterAll } from '@jest/globals';
-import DatabaseBuilder from '../src/services/DatabaseBuilder';
+import DatabaseBuilder from '~/services/DatabaseBuilder';
 
 describe('DatabaseBuilder', () => {
   afterAll(() => {

@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
-import TranslationService from '../src/services/TranslationService';
 import { prismaMock } from './utils/prisma.mock';
+import TranslationService from '~/services/TranslationService';
 
 describe('TranslationService', () => {
   let createTranslation: jest.MockedFunction<
