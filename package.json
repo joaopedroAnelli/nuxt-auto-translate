@@ -10,7 +10,7 @@
   "scripts": {
     "test": "dotenv -e .env.test -- jest",
     "test:cov": "dotenv -e .env.test -- jest --coverage",
-    "posttest:cov": "ts-node commands/open-coverage"
+    "posttest:cov": "ts-node-esm commands/open-coverage"
   },
   "dependencies": {
     "@google-cloud/translate": "^7.0.2",
