@@ -6,6 +6,8 @@ import LanguageGrouper, {
 } from './LanguageGrouper';
 import TranslationService from './TranslationService';
 
+type TranslationDTO = Omit<Translation, 'id'>;
+
 export default class TranslationCreator {
   prismaClient: PrismaClient;
   defaultLocale: string;
@@ -25,70 +27,93 @@ export default class TranslationCreator {
   }
 
   async create() {
-    const messagesMissingTranslation = await this.prismaClient.$queryRaw<
-      IMessagesMissingTranslation[]
-    >`
-    SELECT m."text", l.code as "langCode"
-    from Message m
-    join "Language" l
-    left join "Translation" t on t.messageText = m."text" and l.code = t.languageCode
-    WHERE t."text" is null;
-  `;
+    const leftMessages = await this.getMessagesWithoutTranslation();
 
-    const languagesWithMessages = LanguageGrouper.group(
-      messagesMissingTranslation
-    );
+    const languages = LanguageGrouper.group(leftMessages);
 
-    const defaultLocaleMessages = languagesWithMessages.find(
-      (language) => language.langCode === this.defaultLocale
-    );
+    const byLocale = (l: ILangMessages) => l.langCode === this.defaultLocale;
 
-    if (defaultLocaleMessages) {
-      this.translationService.bulkCreate(
-        defaultLocaleMessages.messages.map((message) => ({
-          languageCode: defaultLocaleMessages.langCode,
-          messageText: message,
-          text: message,
-        }))
-      );
+    const defaultLang = languages.find(byLocale);
+
+    if (defaultLang) {
+      this.createDefaultLocaleMessages(defaultLang);
     }
 
-    const foreignLanguages = languagesWithMessages.filter(
-      (language) => language.langCode !== this.defaultLocale
+    const translationsToCreate: TranslationDTO[] =
+      await this.getTranslationsToCreate(languages);
+
+    await this.translationService.bulkCreate(translationsToCreate);
+  }
+
+  private getMessagesWithoutTranslation() {
+    return this.prismaClient.$queryRaw<IMessagesMissingTranslation[]>`
+      SELECT m."text", l.code as "langCode"
+      from Message m
+      join "Language" l
+      left join "Translation" t on t.messageText = m."text" and l.code = t.languageCode
+      WHERE t."text" is null;
+    `;
+  }
+
+  private createDefaultLocaleMessages(defaultLocaleMessages: ILangMessages) {
+    const translations = defaultLocaleMessages.messages.map((message) => ({
+      languageCode: defaultLocaleMessages.langCode,
+      messageText: message,
+      text: message,
+    }));
+
+    return this.translationService.bulkCreate(translations);
+  }
+
+  private async getTranslationsToCreate(languages: ILangMessages[]) {
+    const byLangCode = (l: ILangMessages) => l.langCode !== this.defaultLocale;
+
+    const foreignLanguages = languages.filter(byLangCode);
+
+    const translationsPromises: Promise<TranslationDTO[]>[] =
+      this.buildTranslationsPromises(foreignLanguages);
+
+    const translationsLists: TranslationDTO[][] = await Promise.all(
+      translationsPromises
     );
 
-    const convertGoogleTranslationInTranslation =
-      (lang: ILangMessages) =>
-      (googleTranslation: string, index: number): Omit<Translation, 'id'> => ({
+    const translationsToCreate: TranslationDTO[] = translationsLists.reduce(
+      (translations, translationList) => translations.concat(translationList),
+      []
+    );
+    return translationsToCreate;
+  }
+
+  private buildTranslationsByGoogleResponse(
+    lang: ILangMessages,
+    googleResponse: [string[], any]
+  ): TranslationDTO[] {
+    const [googleTranslations] = googleResponse;
+
+    const translations: TranslationDTO[] = googleTranslations.map(
+      (googleTranslation, index) => ({
         languageCode: lang.langCode,
         messageText: lang.messages[index],
         text: googleTranslation,
+      })
+    );
+
+    return translations;
+  }
+
+  private buildTranslationsPromises(
+    foreignLanguages: ILangMessages[]
+  ): Promise<TranslationDTO[]>[] {
+    return foreignLanguages.map((lang) => {
+      const googleCall = this.googleTranslateApi.translate(lang.messages, {
+        to: lang.langCode,
       });
 
-    const getGoogleTranslations = (
-      lang: ILangMessages
-    ): Promise<Omit<Translation, 'id'>[]> =>
-      this.googleTranslateApi
-        .translate(lang.messages, { to: lang.langCode })
-        .then((googleResponse) =>
-          googleResponse[0].map(convertGoogleTranslationInTranslation(lang))
-        );
+      const translationsPromise = googleCall.then((googleResponse) => {
+        return this.buildTranslationsByGoogleResponse(lang, googleResponse);
+      });
 
-    const foreignLanguagesTranslationsPromises = foreignLanguages.map(
-      (foreign) => getGoogleTranslations(foreign)
-    );
-
-    const translationsByLanguages = await Promise.all(
-      foreignLanguagesTranslationsPromises
-    );
-
-    const translations: Omit<Translation, 'id'>[] =
-      translationsByLanguages.reduce(
-        (translations, currentTranslations) =>
-          translations.concat(currentTranslations),
-        []
-      );
-
-    await this.translationService.bulkCreate(translations);
+      return translationsPromise;
+    });
   }
 }
