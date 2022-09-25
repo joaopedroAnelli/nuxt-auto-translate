@@ -84,6 +84,22 @@ export default class TranslationCreator {
     return translationsToCreate;
   }
 
+  private buildTranslationsPromises(
+    foreignLanguages: ILangMessages[]
+  ): Promise<TranslationDTO[]>[] {
+    return foreignLanguages.map((lang) => {
+      const googleCall = this.googleTranslateApi.translate(lang.messages, {
+        to: lang.langCode,
+      });
+
+      const translationsPromise = googleCall.then((googleResponse) => {
+        return this.buildTranslationsByGoogleResponse(lang, googleResponse);
+      });
+
+      return translationsPromise;
+    });
+  }
+
   private buildTranslationsByGoogleResponse(
     lang: ILangMessages,
     googleResponse: [string[], any]
@@ -99,21 +115,5 @@ export default class TranslationCreator {
     );
 
     return translations;
-  }
-
-  private buildTranslationsPromises(
-    foreignLanguages: ILangMessages[]
-  ): Promise<TranslationDTO[]>[] {
-    return foreignLanguages.map((lang) => {
-      const googleCall = this.googleTranslateApi.translate(lang.messages, {
-        to: lang.langCode,
-      });
-
-      const translationsPromise = googleCall.then((googleResponse) => {
-        return this.buildTranslationsByGoogleResponse(lang, googleResponse);
-      });
-
-      return translationsPromise;
-    });
   }
 }
