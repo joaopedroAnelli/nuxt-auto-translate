@@ -1,4 +1,5 @@
 import { PrismaClient, Translation, Prisma } from '@prisma/client';
+import Logger from './Logger';
 
 export default class {
   prismaClient: PrismaClient;
@@ -16,9 +17,8 @@ export default class {
   create(
     translation: Omit<Translation, 'id'>
   ): Prisma.Prisma__TranslationClient<Translation> {
-    // eslint-disable-next-line no-console
-    console.info(
-      `[nuxt/auto-translate] - Saving translation: ${translation.messageText} > ${translation.text}`
+    Logger.log(
+      `Saving translation: ${translation.messageText} > ${translation.text}`
     );
     return this.prismaClient.translation.create({
       data: translation,

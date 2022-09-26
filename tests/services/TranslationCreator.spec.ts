@@ -1,7 +1,7 @@
 import { describe, test, expect, jest, beforeEach } from '@jest/globals';
 import { mockDeep, MockProxy } from 'jest-mock-extended';
-import { prismaMock } from './utils/prisma.mock';
-import { googleApiMock } from './utils/googleApi.mock';
+import { prismaMock } from '../utils/prisma.mock';
+import { googleApiMock } from '../utils/googleApi.mock';
 import TranslationCreator from '~/services/TranslationCreator';
 import TranslationService from '~/services/TranslationService';
 import LanguageGrouper, {
