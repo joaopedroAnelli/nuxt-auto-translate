@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AutoTranslate Should change tag 1`] = `
+<div>
+  <p>
+    Hello world
+  </p>
+</div>
+`;
+
+exports[`AutoTranslate Should fall throug classes 1`] = `
+<div>
+  <p
+    class="my-class"
+  >
+    Hello world
+  </p>
+</div>
+`;
+
+exports[`AutoTranslate Should simple render 1`] = `
+<div>
+  <span>
+    Hello world
+  </span>
+</div>
+`;
