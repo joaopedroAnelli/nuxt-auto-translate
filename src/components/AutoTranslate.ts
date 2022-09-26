@@ -12,8 +12,17 @@ export default Vue.extend({
       required: true,
     },
   },
+  methods: {
+    registerText() {
+      if (!this.$te(this.text)) {
+        this.$axios.$post('/api/nuxt-auto-translate/messages', {
+          text: this.text,
+        });
+      }
+    },
+  },
   mounted() {
-    this.$axios.$post('/api/nuxt-auto-translate/messages', { text: this.text });
+    this.registerText();
   },
   template: `<component :is="tag">{{$t(text)}}</component>`,
 });
