@@ -63,4 +63,57 @@ describe('TranslationCreator', () => {
     await translationCreator.create();
     expect(groupMessage).toBeCalledWith(messagesMissingTranslations);
   });
+
+  test('Should skip default lang', async () => {
+    const bulkCreate = mockTranslationService.bulkCreate as jest.MockedFunction<
+      typeof mockTranslationService.bulkCreate
+    >;
+
+    await translationCreator.create();
+
+    expect(bulkCreate).toBeCalledTimes(1);
+    expect(bulkCreate).toBeCalledWith([
+      {
+        languageCode: 'en',
+        messageText: 'Olá Mundo!',
+        text: 'Olá Mundo!',
+      },
+      {
+        languageCode: 'en',
+        messageText: 'Obrigado!',
+        text: 'Obrigado!',
+      },
+      {
+        languageCode: 'es',
+        messageText: 'Obrigado!',
+        text: 'Obrigado!',
+      },
+    ]);
+  });
+
+  test('Should create default language', async () => {
+    const bulkCreate = mockTranslationService.bulkCreate as jest.MockedFunction<
+      typeof mockTranslationService.bulkCreate
+    >;
+
+    groupMessage = jest.fn((_) => [
+      { langCode: 'en', messages: ['Olá Mundo!', 'Obrigado!'] },
+      { langCode: 'es', messages: ['Obrigado!'] },
+      { langCode: 'pt', messages: ['Obrigado!'] },
+    ]);
+
+    LanguageGrouper.group = groupMessage;
+
+    await translationCreator.create();
+
+    expect(bulkCreate).toBeCalledTimes(2);
+
+    expect(bulkCreate.mock.calls[0][0]).toMatchObject([
+      {
+        languageCode: 'pt',
+        messageText: 'Obrigado!',
+        text: 'Obrigado!',
+      },
+    ]);
+  });
 });
