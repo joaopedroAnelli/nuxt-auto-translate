@@ -24,13 +24,19 @@ describe('AutoTranslate', () => {
   });
 
   test('Should change tag', () => {
-    const { container } = render(AutoTranslate, defaultOptions);
+    const { container } = render(AutoTranslate, {
+      ...defaultOptions,
+      attrs: { ...defaultOptions.attrs, tag: 'p' },
+    });
 
     expect(container).toMatchSnapshot();
   });
 
-  test('Should fall throug classes', () => {
-    const { container } = render(AutoTranslate, defaultOptions);
+  test('Should fallthrough classes', () => {
+    const { container } = render(AutoTranslate, {
+      ...defaultOptions,
+      attrs: { ...defaultOptions.attrs, class: 'my-class' },
+    });
 
     expect(container).toMatchSnapshot();
     expect(container.children[0].classList.contains('my-class')).toBeTruthy();

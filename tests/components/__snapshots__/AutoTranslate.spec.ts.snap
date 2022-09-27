@@ -8,13 +8,13 @@ exports[`AutoTranslate Should change tag 1`] = `
 </div>
 `;
 
-exports[`AutoTranslate Should fall throug classes 1`] = `
+exports[`AutoTranslate Should fallthrough classes 1`] = `
 <div>
-  <p
+  <span
     class="my-class"
   >
     Hello world
-  </p>
+  </span>
 </div>
 `;
 
