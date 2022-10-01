@@ -14,7 +14,7 @@ export default class MessagesHandler {
   }
 
   async createMessage(req: Request<Params, ResponseBody, Body>, res: Response) {
-    if (!req.body?.text) {
+    if (!req.body.text) {
       return res.status(422).json('Text is required');
     }
 
