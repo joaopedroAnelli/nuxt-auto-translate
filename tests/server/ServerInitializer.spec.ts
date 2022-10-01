@@ -1,11 +1,4 @@
-import {
-  expect,
-  test,
-  describe,
-  beforeEach,
-  jest,
-  afterEach,
-} from '@jest/globals';
+import { expect, test, describe, beforeEach, jest } from '@jest/globals';
 import { mock, MockProxy } from 'jest-mock-extended';
 import ServerInitializer from '~/server/ServerInitializer';
 import Router from '~/server/builders/Router';
