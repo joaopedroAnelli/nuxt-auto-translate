@@ -17,7 +17,13 @@
       "~/*": ["./src/*"],
       "@/*": ["./src/*"]
     },
-    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node", "@nuxtjs/i18n"],
+    "types": [
+      "@nuxt/types",
+      "@nuxtjs/axios",
+      "@types/node",
+      "@nuxtjs/i18n",
+      "@types/supertest"
+    ],
     "skipLibCheck": true
   },
   "include": ["src/**/*", "tests/**/*", "commands/open-coverage.command.ts"],
