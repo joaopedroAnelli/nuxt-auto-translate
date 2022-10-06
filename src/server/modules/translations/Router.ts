@@ -11,6 +11,9 @@ export default class TranslationRouter implements ModuleRouter {
     this.app = app;
     this.handler = translationHandler;
   }
+  getRouter(): Router {
+    return this.router;
+  }
 
   route() {
     this.router.get('', this.handler.listTranslations);

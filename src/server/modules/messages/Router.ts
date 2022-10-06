@@ -11,6 +11,9 @@ export default class MessageRouter implements ModuleRouter {
     this.app = app;
     this.handler = messageHandler;
   }
+  getRouter(): Router {
+    return this.router;
+  }
 
   route() {
     this.router.post('', this.handler.createMessage);
