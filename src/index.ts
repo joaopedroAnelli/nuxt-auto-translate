@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { resolve } from 'node:path';
 import { Module } from '@nuxt/types';
 import { BaseOptions as I18nOptions } from '@nuxtjs/i18n';
