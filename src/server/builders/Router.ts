@@ -5,7 +5,7 @@ export default class Router implements ServerBuilder {
   routers: ModuleRouter[];
   next: ServerBuilder | undefined;
 
-  constructor(routers: ModuleRouter[]) {
+  constructor(routers: ModuleRouter[] = []) {
     this.routers = routers;
   }
 
