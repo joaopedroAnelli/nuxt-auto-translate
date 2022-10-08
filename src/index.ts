@@ -5,6 +5,11 @@ import { BaseOptions as I18nOptions } from '@nuxtjs/i18n';
 import TranslationsBuilder from './services/TranslationsBuilder';
 import ServerInitializer from '~/server/ServerInitializer';
 import NuxtAutoTranslateServerApp from '~/server/NuxtAutoTranslateExpress';
+import LanguagesUpdater from '~/services/LanguagesUpdater';
+import prisma from '~/prisma.client';
+import TranslationCreator from '~/services/TranslationCreator';
+import TranslationService from '~/services/TranslationService';
+import googleTranslateApi from '~/googleTranslateApi';
 
 export interface ModuleOptions {
   i18n: I18nOptions;
@@ -17,20 +22,29 @@ export interface ModuleOptions {
 
 const translateMessagesModule: Module<ModuleOptions> = function (options) {
   const treatedI18nOptions: I18nOptions = { ...options.i18n };
-  // const i18nOptions = this.nuxt.options.modules.find(
-  //   (module: [string, object] | string) => Array.isArray(module) && !!module[1]
-  // );
-
-  // if (!i18nOptions) {
-  //   console.error(
-  //     '[nuxt/auto-translate] - nuxt/auto-translate require @nuxtjs/i18n module installed and configured. No i18n options found in Nuxt Options '
-  //   );
-  //   return;
-  // }
 
   this.options.modules.push(['@nuxtjs/i18n', treatedI18nOptions]);
 
-  this.nuxt.hook('build:before', TranslationsBuilder.build(options));
+  const languagesUpdater = new LanguagesUpdater(
+    prisma,
+    treatedI18nOptions.locales || []
+  );
+
+  const translationService = new TranslationService(prisma);
+
+  const translationCreator = new TranslationCreator(
+    prisma,
+    treatedI18nOptions.defaultLocale || 'en',
+    translationService,
+    googleTranslateApi
+  );
+
+  const translationsBuilder = new TranslationsBuilder(
+    languagesUpdater,
+    translationCreator
+  );
+
+  this.nuxt.hook('build:before', translationsBuilder.getBuildCallback(options));
 
   this.addPlugin(resolve(__dirname, 'plugins/registerComponent.ts'));
 
