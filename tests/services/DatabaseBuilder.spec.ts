@@ -29,7 +29,7 @@ describe('DatabaseBuilder', () => {
     });
 
     expect(exists).toBeTruthy();
-  }, 20000);
+  }, 30000);
 
   test('should do nothing when db already exists', async () => {
     const path = resolve(__dirname, 'tmp', 'exists.db');
